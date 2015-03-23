@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="wsattacker.sso.openid.attacker.controller.ServerController" name="controller">
+    </Component>
+    <Component class="wsattacker.sso.openid.attacker.gui.server.StartButtonColorConverter" name="startButtonColorConverter">
+    </Component>
+  </NonVisualComponents>
+  <Properties>
+    <Property name="name" type="java.lang.String" value="Server Configuration" noResource="true"/>
+  </Properties>
+  <AccessibilityProperties>
+    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Server Configuration"/>
+  </AccessibilityProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="logScrollPane" alignment="1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="statusLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="performAttackLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="portLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="associationPrefixLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="expirationLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="interceptLabel" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="portText" alignment="0" max="32767" attributes="0"/>
+                          <Component id="expirationText" alignment="0" max="32767" attributes="0"/>
+                          <Component id="associationPrefixValue" alignment="0" max="32767" attributes="0"/>
+                          <Component id="statusValue" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="performAttackCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="interceptCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="startButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="stopButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="title" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="associationScrollPane1" alignment="0" pref="847" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="title" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="portLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="portText" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="associationPrefixLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="associationPrefixValue" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="expirationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="expirationText" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="interceptLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="interceptCheckbox" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="performAttackLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="performAttackCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="statusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="statusValue" alignment="3" min="-2" pref="15" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="startButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="stopButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="associationScrollPane1" min="-2" pref="102" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="logScrollPane" pref="96" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="portLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Server Listen Port:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="associationPrefixLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Association Prefix:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="associationPrefixValue">
+      <BindingProperties>
+        <BindingProperty name="text" source="controller" sourcePath="${config.associationPrefix}" target="associationPrefixValue" targetPath="text" updateStrategy="0" immediately="false">
+          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+        </BindingProperty>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="expirationLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Association Expiration Time:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="interceptLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Intercept IdP Response:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="performAttackLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Perform Attack:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="portText">
+      <BindingProperties>
+        <BindingProperty name="text" source="controller" sourcePath="${config.serverListenPort}" target="portText" targetPath="text" updateStrategy="0" immediately="false">
+          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+        </BindingProperty>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="expirationText">
+      <BindingProperties>
+        <BindingProperty name="text" source="controller" sourcePath="${config.associationExpirationInSeconds}" target="expirationText" targetPath="text" updateStrategy="0" immediately="false">
+          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+        </BindingProperty>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="interceptCheckbox">
+      <BindingProperties>
+        <BindingProperty name="selected" source="controller" sourcePath="${config.interceptIdPResponse}" target="interceptCheckbox" targetPath="selected" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="performAttackCheckbox">
+      <BindingProperties>
+        <BindingProperty name="selected" source="controller" sourcePath="${config.performAttack}" target="performAttackCheckbox" targetPath="selected" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="statusLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Server Status:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="statusValue">
+      <BindingProperties>
+        <BindingProperty name="text" source="controller" sourcePath="${server.serverStatusline}" target="statusValue" targetPath="text" updateStrategy="1" immediately="false"/>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JButton" name="startButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Start"/>
+      </Properties>
+      <BindingProperties>
+        <BindingProperty name="background" source="controller" sourcePath="${server.status}" target="startButton" targetPath="background" updateStrategy="1" immediately="false">
+          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+            <ComponentRef name="startButtonColorConverter"/>
+          </Property>
+          <Property name="name" type="java.lang.String" value="startButtonColor"/>
+        </BindingProperty>
+        <BindingProperty name="enabled" source="controller" sourcePath="${server.status}" target="startButton" targetPath="enabled" updateStrategy="0" immediately="false">
+          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+            <Connection code="new org.jdesktop.beansbinding.Converter&lt;Status, Boolean&gt;() {&#xa;    @Override&#xa;    public Boolean convertForward(Status value) {&#xa;        return Status.STOPPED.equals(value);&#xa;    }&#xa;&#xa;    @Override&#xa;    public Status convertReverse(Boolean value) {&#xa;        throw new UnsupportedOperationException(&quot;Read only!&quot;);&#xa;    }&#xa;}" type="code"/>
+          </Property>
+          <Property name="name" type="java.lang.String" value=""/>
+        </BindingProperty>
+      </BindingProperties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="stopButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stop"/>
+      </Properties>
+      <BindingProperties>
+        <BindingProperty name="enabled" source="controller" sourcePath="${server.status}" target="stopButton" targetPath="enabled" updateStrategy="0" immediately="false">
+          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+            <Connection code="new org.jdesktop.beansbinding.Converter&lt;Status, Boolean&gt;() {&#xa;    @Override&#xa;    public Boolean convertForward(Status value) {&#xa;        return Status.RUNNING.equals(value);&#xa;    }&#xa;&#xa;    @Override&#xa;    public Status convertReverse(Boolean value) {&#xa;        throw new UnsupportedOperationException(&quot;Read only!&quot;);&#xa;    }&#xa;}" type="code"/>
+          </Property>
+        </BindingProperty>
+      </BindingProperties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stopButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="title">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="24" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Server Overview"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="associationScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="associationTable">
+          <BindingProperties>
+            <BindingProperty name="elements" source="controller" sourcePath="${server.store.associationList}" target="associationTable" targetPath="elements" updateStrategy="1" immediately="true">
+              <Property name="name" type="java.lang.String" value="associationTable"/>
+              <Subbinding sourcePath="${handle}">
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
+              </Subbinding>
+              <Subbinding sourcePath="${expiry}">
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+              </Subbinding>
+              <Subbinding sourcePath="${type}">
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
+              </Subbinding>
+            </BindingProperty>
+          </BindingProperties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="logScrollPane">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="logTable">
+          <Properties>
+            <Property name="autoResizeMode" type="int" value="3"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="elements" source="controller" sourcePath="${requestLog}" target="logTable" targetPath="elements" updateStrategy="1" immediately="true">
+              <Property name="name" type="java.lang.String" value="log"/>
+              <Subbinding sourcePath="${type}">
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="wsattacker.sso.openid.attacker.log.RequestType.class"/>
+              </Subbinding>
+              <Subbinding sourcePath="${date}">
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+              </Subbinding>
+              <Subbinding sourcePath="${text}">
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
+              </Subbinding>
+            </BindingProperty>
+          </BindingProperties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>
