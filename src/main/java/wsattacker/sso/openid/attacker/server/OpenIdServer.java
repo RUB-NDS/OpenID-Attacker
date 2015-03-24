@@ -23,7 +23,7 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
     private static final Log LOG = LogFactory.getLog(OpenIdServer.class);
     public static final String PROP_STATUS = "status";
     public static final String PROP_STOREDASSOCIATIONS = "storedAssociations";
-    public static final String PROP_PROCESSOR = "processor";
+    //public static final String PROP_PROCESSOR = "processor";
     public static final String PROP_HANDLER = "handler";
     public static final String PROP_STORE = "store";
     private Status status = Status.STOPPED;
@@ -31,6 +31,7 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
     private CustomOpenIdProcessor processor;
     private CustomOpenIdProviderHandler handler;
     private CustomInMemoryServerAssociationStore store;
+    private OpenIdServerConfiguration config;
     private String serverStatusline = status.toString();
     public static final String PROP_SERVERSTATUSLINE = "serverStatusline";
 
@@ -59,10 +60,23 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
     }
 
     public OpenIdServer() {
-        final OpenIdServerConfiguration config = OpenIdServerConfiguration.getInstance();
+        this(IdpType.ATTACKER);
+    }
+    
+    public OpenIdServer(IdpType idpType) {
+        
+        switch (idpType) {
+            case ATTACKER:
+                this.config = OpenIdServerConfiguration.getAttackerInstance();
+                break;
+            case ANALYZER:
+                this.config = OpenIdServerConfiguration.getAnalyzerInstance();
+                break;
+        }
+        
         final XrdsConfiguration xrdsConfig = config.getXrdsConfiguration();
         final HtmlDiscoveryConfiguration htmlConfiguration = config.getHtmlConfiguration();
-        handler = new CustomOpenIdProviderHandler();
+        handler = new CustomOpenIdProviderHandler(idpType);
         processor = handler.getOpenIdProcessor();
         processor.setEndpoint(xrdsConfig.getBaseUrl());
         processor.setExpiresIn(config.getAssociationExpirationInSeconds());
@@ -152,7 +166,7 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
     }
 
     public void start() throws OpenIdAttackerServerException {
-        int port = OpenIdServerConfiguration.getInstance().getServerListenPort();
+        int port = config.getServerListenPort();
         newServer = new Server(port);
         newServer.setHandler(handler);
         try {

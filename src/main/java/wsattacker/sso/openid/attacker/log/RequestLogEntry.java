@@ -1,26 +1,32 @@
+
 package wsattacker.sso.openid.attacker.log;
 
+import java.io.Serializable;
 import java.util.Date;
 import wsattacker.sso.openid.attacker.composition.AbstractBean;
+import wsattacker.sso.openid.attacker.server.IdpType;
 
-public class RequestLogEntry extends AbstractBean {
+public class RequestLogEntry extends AbstractBean implements Serializable {
 
     public static final String PROP_TYPE = "type";
     public static final String PROP_DATE = "date";
     public static final String PROP_TEXT = "text";
     public static final String PROP_REQUEST = "request";
     public static final String PROP_RESPONSE = "response";
+    public static final String PROP_IDPTYPE = "idpType";
     private RequestType type = RequestType.ASSOCIATION;
     final private Date date = new Date();
     private String text = "";
     private String request = "";
     private String response = "";
+    private IdpType idpType = IdpType.ATTACKER;
 
-    protected RequestLogEntry(RequestType type, String text, String request, String response) {
+    protected RequestLogEntry(RequestType type, String text, String request, String response, IdpType idpType) {
         this.text = text;
         this.type = type;
         this.request = request;
         this.response = response;
+        this.idpType = idpType;
     }
 
     /**
@@ -110,5 +116,25 @@ public class RequestLogEntry extends AbstractBean {
         RequestType oldType = this.type;
         this.type = type;
         firePropertyChange(PROP_TYPE, oldType, type);
+    }
+    
+    /**
+     * Get the value of idpType
+     *
+     * @return the value of idpType
+     */
+    public IdpType getIdpType() {
+        return idpType;
+    }
+
+    /**
+     * Set the value of idpType
+     *
+     * @param idpType new value of idpType
+     */
+    public void setIdpType(IdpType idpType) {
+        IdpType oldIdpType = this.idpType;
+        this.idpType = idpType;
+        firePropertyChange(PROP_IDPTYPE, oldIdpType, idpType);
     }
 }

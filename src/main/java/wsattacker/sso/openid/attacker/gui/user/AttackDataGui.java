@@ -2,6 +2,7 @@ package wsattacker.sso.openid.attacker.gui.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import wsattacker.sso.openid.attacker.server.IdpType;
 import wsattacker.sso.openid.attacker.user.UserData;
 import wsattacker.sso.openid.attacker.user.UserDataCollector;
 
@@ -183,5 +184,9 @@ public class AttackDataGui extends javax.swing.JPanel {
             dataList.addAll(first - rowToMove, toMove);
             dataTable.setRowSelectionInterval(first - rowToMove, first - rowToMove + anz - 1);
         }
+    }
+
+    public void setIdp(IdpType idp) {
+        controller.setIdp(idp);
     }
 }

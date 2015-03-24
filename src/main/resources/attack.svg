@@ -1,0 +1,15 @@
+<svg version="1.1" baseProfile="full" width="680" height="$verticalLength" xmlns="http://www.w3.org/2000/svg">
+  <line x1="30" y1="30" x2="30" y2="$verticalLength" stroke="black" fill="transparent" stroke-width="1" style="stroke-dasharray: 5 2;" />
+  <text x="30" y="15" font-size="16" text-anchor="middle" fill="black">Client</text>
+
+  <line x1="230" y1="30" x2="230" y2="$verticalLength" stroke="black" fill="transparent" stroke-width="1" style="stroke-dasharray: 5 2;" />
+  <text x="230" y="15" font-size="16" text-anchor="middle" fill="black">SP</text>
+
+  <line x1="430" y1="30" x2="430" y2="$verticalLength" stroke="black" fill="transparent" stroke-width="1" style="stroke-dasharray: 5 2;" />
+  <text x="430" y="15" font-size="16" text-anchor="middle" fill="black">IdP (Attacker)</text>
+
+  <line x1="630" y1="30" x2="630" y2="$verticalLength" stroke="black" fill="transparent" stroke-width="1" style="stroke-dasharray: 5 2;" />
+  <text x="630" y="15" font-size="16" text-anchor="middle" fill="black">IdP (Analyzer)</text>
+
+  $svgContent
+</svg>

@@ -1,10 +1,34 @@
 package wsattacker.sso.openid.attacker.gui.server;
 
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
+import javax.swing.SwingConstants;
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.beansbinding.Converter;
+import org.jdesktop.beansbinding.ELProperty;
+import org.jdesktop.swingbinding.JTableBinding;
+import org.jdesktop.swingbinding.SwingBindings;
+import wsattacker.sso.openid.attacker.config.OpenIdServerConfiguration;
+import wsattacker.sso.openid.attacker.controller.ServerController;
 import wsattacker.sso.openid.attacker.log.RequestType;
+import wsattacker.sso.openid.attacker.server.IdpType;
 import wsattacker.sso.openid.attacker.server.exception.OpenIdAttackerServerException;
 import wsattacker.sso.openid.attacker.server.status.Status;
 
@@ -15,9 +39,17 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
      */
     public ServerConfigurationGui() {
         initComponents();
+        
         associationTable.setDefaultRenderer(Date.class, new DateRenderer());
         logTable.setDefaultRenderer(Date.class, new DateRenderer());
         logTable.setDefaultRenderer(RequestType.class, new TypeRenderer());
+    }
+    
+    public void setIdp(IdpType idp) {
+        controller.setIdp(idp);
+        
+        performAttackCheckbox.setEnabled(false);
+        performAttackLabel.setEnabled(false);
     }
 
     /**
@@ -29,29 +61,30 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
+        bindingGroup = new BindingGroup();
 
-        controller = new wsattacker.sso.openid.attacker.controller.ServerController();
-        startButtonColorConverter = new wsattacker.sso.openid.attacker.gui.server.StartButtonColorConverter();
-        portLabel = new javax.swing.JLabel();
-        associationPrefixLabel = new javax.swing.JLabel();
-        associationPrefixValue = new javax.swing.JTextField();
-        expirationLabel = new javax.swing.JLabel();
-        interceptLabel = new javax.swing.JLabel();
-        performAttackLabel = new javax.swing.JLabel();
-        portText = new javax.swing.JTextField();
-        expirationText = new javax.swing.JTextField();
-        interceptCheckbox = new javax.swing.JCheckBox();
-        performAttackCheckbox = new javax.swing.JCheckBox();
-        statusLabel = new javax.swing.JLabel();
-        statusValue = new javax.swing.JLabel();
-        startButton = new javax.swing.JButton();
-        stopButton = new javax.swing.JButton();
-        title = new javax.swing.JLabel();
-        associationScrollPane1 = new javax.swing.JScrollPane();
-        associationTable = new javax.swing.JTable();
-        logScrollPane = new javax.swing.JScrollPane();
-        logTable = new javax.swing.JTable();
+        controller = new ServerController();
+        startButtonColorConverter = new StartButtonColorConverter();
+        portLabel = new JLabel();
+        associationPrefixLabel = new JLabel();
+        associationPrefixValue = new JTextField();
+        expirationLabel = new JLabel();
+        interceptLabel = new JLabel();
+        performAttackLabel = new JLabel();
+        portText = new JTextField();
+        expirationText = new JTextField();
+        interceptCheckbox = new JCheckBox();
+        performAttackCheckbox = new JCheckBox();
+        statusLabel = new JLabel();
+        statusValue = new JLabel();
+        startButton = new JButton();
+        stopButton = new JButton();
+        title = new JLabel();
+        associationScrollPane1 = new JScrollPane();
+        associationTable = new JTable();
+        logScrollPane = new JScrollPane();
+        logTable = new JTable();
+        jCheckBox2 = new JCheckBox();
 
         setName("Server Configuration"); // NOI18N
 
@@ -59,7 +92,7 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
 
         associationPrefixLabel.setText("Association Prefix:");
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${config.associationPrefix}"), associationPrefixValue, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${config.associationPrefix}"), associationPrefixValue, BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         expirationLabel.setText("Association Expiration Time:");
@@ -68,30 +101,30 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
 
         performAttackLabel.setText("Perform Attack:");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${config.serverListenPort}"), portText, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${config.serverListenPort}"), portText, BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${config.associationExpirationInSeconds}"), expirationText, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${config.associationExpirationInSeconds}"), expirationText, BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${config.interceptIdPResponse}"), interceptCheckbox, org.jdesktop.beansbinding.BeanProperty.create("selected"));
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${config.interceptIdPResponse}"), interceptCheckbox, BeanProperty.create("selected"));
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${config.performAttack}"), performAttackCheckbox, org.jdesktop.beansbinding.BeanProperty.create("selected"));
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${config.performAttack}"), performAttackCheckbox, BeanProperty.create("selected"));
         bindingGroup.addBinding(binding);
 
         statusLabel.setText("Server Status:");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, controller, org.jdesktop.beansbinding.ELProperty.create("${server.serverStatusline}"), statusValue, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, controller, ELProperty.create("${server.serverStatusline}"), statusValue, BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         startButton.setText("Start");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, controller, org.jdesktop.beansbinding.ELProperty.create("${server.status}"), startButton, org.jdesktop.beansbinding.BeanProperty.create("background"), "startButtonColor");
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, controller, ELProperty.create("${server.status}"), startButton, BeanProperty.create("background"), "startButtonColor");
         binding.setConverter(startButtonColorConverter);
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${server.status}"), startButton, org.jdesktop.beansbinding.BeanProperty.create("enabled"), "");
-        binding.setConverter(new org.jdesktop.beansbinding.Converter<Status, Boolean>() {
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${server.status}"), startButton, BeanProperty.create("enabled"), "");
+        binding.setConverter(new Converter<Status, Boolean>() {
             @Override
             public Boolean convertForward(Status value) {
                 return Status.STOPPED.equals(value);
@@ -104,16 +137,16 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
         });
         bindingGroup.addBinding(binding);
 
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        startButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 startButtonActionPerformed(evt);
             }
         });
 
         stopButton.setText("Stop");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${server.status}"), stopButton, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        binding.setConverter(new org.jdesktop.beansbinding.Converter<Status, Boolean>() {
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${server.status}"), stopButton, BeanProperty.create("enabled"));
+        binding.setConverter(new Converter<Status, Boolean>() {
             @Override
             public Boolean convertForward(Status value) {
                 return Status.RUNNING.equals(value);
@@ -126,24 +159,24 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
         });
         bindingGroup.addBinding(binding);
 
-        stopButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        stopButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 stopButtonActionPerformed(evt);
             }
         });
 
-        title.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        title.setFont(new Font("Dialog", 1, 24)); // NOI18N
         title.setText("Server Overview");
 
-        org.jdesktop.beansbinding.ELProperty eLProperty = org.jdesktop.beansbinding.ELProperty.create("${server.store.associationList}");
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, controller, eLProperty, associationTable, "associationTable");
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${handle}"));
+        ELProperty eLProperty = ELProperty.create("${server.store.associationList}");
+        JTableBinding jTableBinding = SwingBindings.createJTableBinding(AutoBinding.UpdateStrategy.READ, controller, eLProperty, associationTable, "associationTable");
+        JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${handle}"));
         columnBinding.setColumnName("Handle");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${expiry}"));
+        columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${expiry}"));
         columnBinding.setColumnName("Expiry");
-        columnBinding.setColumnClass(java.util.Date.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${type}"));
+        columnBinding.setColumnClass(Date.class);
+        columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${type}"));
         columnBinding.setColumnName("Type");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
@@ -151,100 +184,114 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
 
         associationScrollPane1.setViewportView(associationTable);
 
-        logTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        logTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
-        eLProperty = org.jdesktop.beansbinding.ELProperty.create("${requestLog}");
-        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, controller, eLProperty, logTable, "log");
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${type}"));
+        eLProperty = ELProperty.create("${requestLog}");
+        jTableBinding = SwingBindings.createJTableBinding(AutoBinding.UpdateStrategy.READ, controller, eLProperty, logTable, "log");
+        columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${type}"));
         columnBinding.setColumnName("Type");
-        columnBinding.setColumnClass(wsattacker.sso.openid.attacker.log.RequestType.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${date}"));
+        columnBinding.setColumnClass(RequestType.class);
+        columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${date}"));
         columnBinding.setColumnName("Date");
-        columnBinding.setColumnClass(java.util.Date.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${text}"));
+        columnBinding.setColumnClass(Date.class);
+        columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${text}"));
         columnBinding.setColumnName("Text");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         logScrollPane.setViewportView(logTable);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        jCheckBox2.setText("GET");
+
+        binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, controller, ELProperty.create("${config.methodGet}"), jCheckBox2, BeanProperty.create("selected"));
+        bindingGroup.addBinding(binding);
+
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(logScrollPane, GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                             .addComponent(statusLabel)
                             .addComponent(performAttackLabel)
                             .addComponent(portLabel)
                             .addComponent(associationPrefixLabel)
                             .addComponent(expirationLabel)
                             .addComponent(interceptLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(portText)
                             .addComponent(expirationText)
                             .addComponent(associationPrefixValue)
-                            .addComponent(statusValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(performAttackCheckbox)
-                                    .addComponent(interceptCheckbox)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(startButton)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(stopButton)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(startButton)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(stopButton)
+                                .addGap(0, 504, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(statusValue, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(performAttackCheckbox))
+                                .addGap(210, 210, 210))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(interceptCheckbox)
+                                .addGap(63, 63, 63)
+                                .addComponent(jCheckBox2)
+                                .addGap(4, 513, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(title)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(associationScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE))
+                    .addComponent(associationScrollPane1, GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {startButton, stopButton});
+        layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {startButton, stopButton});
 
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(title)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(portLabel)
-                    .addComponent(portText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(portText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(associationPrefixLabel)
-                    .addComponent(associationPrefixValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(associationPrefixValue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(expirationLabel)
-                    .addComponent(expirationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(interceptLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(interceptCheckbox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(performAttackLabel)
-                    .addComponent(performAttackCheckbox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(statusLabel)
-                    .addComponent(statusValue, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(startButton)
-                    .addComponent(stopButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(associationScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(expirationText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(interceptLabel, GroupLayout.Alignment.TRAILING)
+                            .addComponent(interceptCheckbox))
+                        .addGap(7, 7, 7)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(performAttackCheckbox)
+                            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(performAttackLabel)
+                                .addGap(3, 3, 3)))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(statusLabel)
+                            .addComponent(statusValue, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(startButton)
+                            .addComponent(stopButton))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(associationScrollPane1, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(logScrollPane, GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jCheckBox2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(0, 0, 0))
         );
 
@@ -268,28 +315,30 @@ public class ServerConfigurationGui extends javax.swing.JPanel {
             Logger.getLogger(ServerConfigurationGui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_stopButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel associationPrefixLabel;
-    private javax.swing.JTextField associationPrefixValue;
-    private javax.swing.JScrollPane associationScrollPane1;
-    private javax.swing.JTable associationTable;
-    private wsattacker.sso.openid.attacker.controller.ServerController controller;
-    private javax.swing.JLabel expirationLabel;
-    private javax.swing.JTextField expirationText;
-    private javax.swing.JCheckBox interceptCheckbox;
-    private javax.swing.JLabel interceptLabel;
-    private javax.swing.JScrollPane logScrollPane;
-    private javax.swing.JTable logTable;
-    private javax.swing.JCheckBox performAttackCheckbox;
-    private javax.swing.JLabel performAttackLabel;
-    private javax.swing.JLabel portLabel;
-    private javax.swing.JTextField portText;
-    private javax.swing.JButton startButton;
-    private wsattacker.sso.openid.attacker.gui.server.StartButtonColorConverter startButtonColorConverter;
-    private javax.swing.JLabel statusLabel;
-    private javax.swing.JLabel statusValue;
-    private javax.swing.JButton stopButton;
-    private javax.swing.JLabel title;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
+    private JLabel associationPrefixLabel;
+    private JTextField associationPrefixValue;
+    private JScrollPane associationScrollPane1;
+    private JTable associationTable;
+    private ServerController controller;
+    private JLabel expirationLabel;
+    private JTextField expirationText;
+    private JCheckBox interceptCheckbox;
+    private JLabel interceptLabel;
+    private JCheckBox jCheckBox2;
+    private JScrollPane logScrollPane;
+    private JTable logTable;
+    private JCheckBox performAttackCheckbox;
+    private JLabel performAttackLabel;
+    private JLabel portLabel;
+    private JTextField portText;
+    private JButton startButton;
+    private StartButtonColorConverter startButtonColorConverter;
+    private JLabel statusLabel;
+    private JLabel statusValue;
+    private JButton stopButton;
+    private JLabel title;
+    private BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

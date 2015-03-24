@@ -109,6 +109,9 @@
       <BindingProperties>
         <BindingProperty name="selected" source="controller" sourcePath="${config.performAttack}" target="performAttack" targetPath="selected" updateStrategy="0" immediately="false"/>
       </BindingProperties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="performAttackStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="interceptToken">
       <Properties>

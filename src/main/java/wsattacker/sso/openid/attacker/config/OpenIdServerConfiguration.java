@@ -23,18 +23,38 @@ public final class OpenIdServerConfiguration extends AbstractBean implements Ser
     public static final String PROP_PROFILES = "profiles";
     public static final String PROP_XRDSCONFIGURATION = "xrdsConfiguration";
     public static final String PROP_HTMLCONFIGURATION = "htmlConfiguration";
-
     public static final String PROP_SENDTOKENTOATTACKURL = "sendTokenToAttackUrl";
+    public static final String PROP_METHODGET = "methodGet";
 
-    private static final OpenIdServerConfiguration INSTANCE = new OpenIdServerConfiguration();
+    private static final OpenIdServerConfiguration ATTACKER_INSTANCE = new OpenIdServerConfiguration();
+    private static final OpenIdServerConfiguration ANALYZER_INSTANCE = new OpenIdServerConfiguration();
 
     /**
-     * Singleton Method to get the Configuration.
+     * Singleton Method to get the configuration of the attacker server.
      *
      * @return a Configuration for the OpenID Attacker
      */
-    public static OpenIdServerConfiguration getInstance() {
-        return INSTANCE;
+    public static OpenIdServerConfiguration getAttackerInstance() {
+        /*if (ATTACKER_INSTANCE == null) {
+            ATTACKER_INSTANCE = new OpenIdServerConfiguration();
+            System.out.println("attacker instance: " + ATTACKER_INSTANCE);
+        }*/
+        
+        return ATTACKER_INSTANCE;
+    }
+    
+    /**
+     * Singleton Method to get the configuration of the analyzer server.
+     * 
+     * @return
+     */
+    public static OpenIdServerConfiguration getAnalyzerInstance() {
+        /*if (ANALYZER_INSTANCE == null) {
+            ANALYZER_INSTANCE = new OpenIdServerConfiguration();
+            System.out.println("analyzer instance: " + ANALYZER_INSTANCE);
+        }*/
+        
+        return ANALYZER_INSTANCE;
     }
 
     private boolean sendTokenToAttackUrl = false;
@@ -45,14 +65,18 @@ public final class OpenIdServerConfiguration extends AbstractBean implements Ser
     private int serverListenPort = 8080;
     private boolean interceptIdPResponse = true;
     private boolean performAttack = false;
+    private boolean methodGet = false;
+    //private boolean removeAssocHandleFromAuthRequest = false;
     private int associationExpirationInSeconds = 10;
     private User validUser = new User();
     private AttackProfileContainer profiles = new AttackProfileContainer();
 
-    public OpenIdServerConfiguration() {
+    private OpenIdServerConfiguration() {
+        
     }
 
     public boolean isSendTokenToAttackUrl() {
+        
         return sendTokenToAttackUrl;
     }
 
@@ -188,6 +212,7 @@ public final class OpenIdServerConfiguration extends AbstractBean implements Ser
      * @return the value of performAttack
      */
     public boolean isPerformAttack() {
+        //System.out.println("isPerformAttack() - " + this);
         return performAttack;
     }
 
@@ -201,6 +226,26 @@ public final class OpenIdServerConfiguration extends AbstractBean implements Ser
         this.performAttack = performAttack;
         firePropertyChange(PROP_PERFORMATTACK, oldPerformAttack, performAttack);
     }
+    
+    /**
+     * Get the value of methodGet
+     *
+     * @return the value of methodGet
+     */
+    public boolean isMethodGet() {
+        return methodGet;
+    }
+
+    /**
+     * Set the value of methodGet
+     *
+     * @param methodGet new value of methodGet
+     */
+    public void setMethodGet(boolean methodGet) {
+        boolean oldMethodGet = this.methodGet;
+        this.methodGet = methodGet;
+        firePropertyChange(PROP_METHODGET, oldMethodGet, methodGet);
+    }    
 
     /**
      * Get the value of associationExpirationInSeconds
@@ -262,4 +307,12 @@ public final class OpenIdServerConfiguration extends AbstractBean implements Ser
         this.interceptIdPResponse = interceptIdPResponse;
         firePropertyChange(PROP_INTERCEPTIDPRESPONSE, oldInterceptIdPResponse, interceptIdPResponse);
     }
+    
+    /*public boolean isRemoveAssocHandleFromAuthRequest() {
+        return removeAssocHandleFromAuthRequest;
+    }
+
+    public void setRemoveAssocHandleFromAuthRequest(boolean removeAssocHandleFromAuthRequest) {
+        this.removeAssocHandleFromAuthRequest = removeAssocHandleFromAuthRequest;
+    }*/
 }

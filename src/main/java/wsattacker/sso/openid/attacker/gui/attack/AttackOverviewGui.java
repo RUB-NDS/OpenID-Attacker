@@ -9,19 +9,32 @@ import org.jdesktop.observablecollections.ObservableList;
 import org.jdesktop.observablecollections.ObservableListListener;
 import wsattacker.sso.openid.attacker.attack.parameter.AttackParameter;
 import wsattacker.sso.openid.attacker.attack.parameter.AttackParameterKeeper;
+import wsattacker.sso.openid.attacker.server.IdpType;
 
 public class AttackOverviewGui extends javax.swing.JPanel implements ObservableListListener {
 
     /**
      * Creates new form AttackOverviewGui
+     * @param idpType
      */
-    public AttackOverviewGui() {
+    public AttackOverviewGui(final IdpType idpType) {
         initComponents();
+        
+        controller.setIdp(idpType);
+        
+        if (idpType.equals(IdpType.ANALYZER)) {
+            performAttack.setEnabled(false);
+            sendTokenToAttackerUrl.setEnabled(false);
+        }
+        
+        // set speed for scrolling
+        parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        
         AttackParameterKeeper keeper = controller.getServer().getParameterConfiguration();
         ObservableList<AttackParameter> list = (ObservableList<AttackParameter>) keeper.getParameterList();
         list.addObservableListListener(this);
         newParameterName.setInputVerifier(new InputVerifier() {
-		final private AttackParameterKeeper parameters = controller.getServer().getParameterConfiguration();
+            final private AttackParameterKeeper parameters = controller.getServer().getParameterConfiguration();
 
             @Override
             public boolean verify(JComponent jc) {
@@ -35,6 +48,10 @@ public class AttackOverviewGui extends javax.swing.JPanel implements ObservableL
                 return !contained;
             }
         });
+    }
+    
+    public void setIdp(IdpType idp) {
+        controller.setIdp(idp);
     }
 
     @Override
@@ -113,6 +130,12 @@ public class AttackOverviewGui extends javax.swing.JPanel implements ObservableL
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, controller, org.jdesktop.beansbinding.ELProperty.create("${config.performAttack}"), performAttack, org.jdesktop.beansbinding.BeanProperty.create("selected"));
         bindingGroup.addBinding(binding);
+
+        performAttack.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                performAttackStateChanged(evt);
+            }
+        });
 
         interceptToken.setText("Intercept Token");
 
@@ -230,6 +253,11 @@ public class AttackOverviewGui extends javax.swing.JPanel implements ObservableL
             errorLabel.setText(e.getMessage());
         }
     }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void performAttackStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_performAttackStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_performAttackStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private wsattacker.sso.openid.attacker.controller.ServerController controller;
@@ -254,4 +282,8 @@ public class AttackOverviewGui extends javax.swing.JPanel implements ObservableL
 //        gui.setAlignmentX(Component.LEFT_ALIGNMENT);
 //        gui.setAlignmentY(Component.TOP_ALIGNMENT);
     }
+
+//    public void setIdp(IdpType idp) {
+//        controller.setIdp(idp);
+//    }
 }

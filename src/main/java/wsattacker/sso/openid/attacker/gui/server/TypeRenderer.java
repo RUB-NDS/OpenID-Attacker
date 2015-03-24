@@ -33,6 +33,9 @@ public class TypeRenderer extends DefaultTableCellRenderer {
             case ERROR:
                 result = Color.MAGENTA;
                 break;
+            case XXE:
+                result = Color.PINK;
+                break;
             default:
                 throw new AssertionError();
         }

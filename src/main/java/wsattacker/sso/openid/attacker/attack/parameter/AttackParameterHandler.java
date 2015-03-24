@@ -49,7 +49,7 @@ final public class AttackParameterHandler {
     }
 
     public static Map<String, String> createMapByMethod(final AttackParameterKeeper keeper, final HttpMethod method) {
-        return createMapByMethod(keeper, method, OpenIdServerConfiguration.getInstance().isPerformAttack());
+        return createMapByMethod(keeper, method, OpenIdServerConfiguration.getAttackerInstance().isPerformAttack());
     }
 
     public static Map<String, String> createMapByMethod(final AttackParameterKeeper keeper, final HttpMethod method, final boolean attackPerformed) {

@@ -446,6 +446,12 @@ public class SearchReplaceAttackParameterGui extends AbstractAttackParameterGui 
 
     private void formAncestorResized(HierarchyEvent evt) {//GEN-FIRST:event_formAncestorResized
         Component parent = evt.getChangedParent();
+        
+        // TODO: small hack that prevent the application from throwing exceptions
+        if (parent == null) {
+            return;
+        }
+        
         int newHeight = getSize().height;
         int newWidth = parent.getSize().width - 40;
         setSize(newWidth, newHeight);

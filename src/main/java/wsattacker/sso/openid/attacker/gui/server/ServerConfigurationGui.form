@@ -46,18 +46,24 @@
                           <Component id="portText" alignment="0" max="32767" attributes="0"/>
                           <Component id="expirationText" alignment="0" max="32767" attributes="0"/>
                           <Component id="associationPrefixValue" alignment="0" max="32767" attributes="0"/>
-                          <Component id="statusValue" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="startButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="stopButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="504" max="32767" attributes="0"/>
+                          </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="statusValue" max="32767" attributes="0"/>
                                   <Component id="performAttackCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="interceptCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="startButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="stopButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="210" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="interceptCheckbox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                              <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="4" pref="513" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -76,7 +82,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="title" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="portLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="portText" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -93,28 +99,38 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="interceptLabel" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="interceptCheckbox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="interceptLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="interceptCheckbox" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="performAttackCheckbox" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="performAttackLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="statusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="statusValue" alignment="3" min="-2" pref="15" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="startButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="stopButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="associationScrollPane1" min="-2" pref="102" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="logScrollPane" pref="95" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="performAttackLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="performAttackCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="statusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="statusValue" alignment="3" min="-2" pref="15" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="startButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stopButton" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="associationScrollPane1" min="-2" pref="102" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="logScrollPane" pref="96" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -285,5 +301,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JCheckBox" name="jCheckBox2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="GET"/>
+      </Properties>
+      <BindingProperties>
+        <BindingProperty name="selected" source="controller" sourcePath="${config.methodGet}" target="jCheckBox2" targetPath="selected" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
+    </Component>
   </SubComponents>
 </Form>

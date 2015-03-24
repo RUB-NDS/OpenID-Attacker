@@ -1,5 +1,7 @@
 package wsattacker.sso.openid.attacker.gui.discovery.html;
 
+import wsattacker.sso.openid.attacker.server.IdpType;
+
 public class HtmlConfigurationGui extends javax.swing.JPanel {
 
     /**
@@ -185,4 +187,8 @@ public class HtmlConfigurationGui extends javax.swing.JPanel {
     private javax.swing.JScrollPane xmlScrollPane;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+
+    public void setIdp(IdpType idp) {
+        controller.setIdp(idp);
+    }
 }

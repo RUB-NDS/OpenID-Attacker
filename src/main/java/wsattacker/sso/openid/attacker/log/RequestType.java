@@ -2,7 +2,7 @@ package wsattacker.sso.openid.attacker.log;
 
 public enum RequestType {
 
-    ASSOCIATION("Association"), XRDS("XRDS"), HTML("HTML"), TOKEN_VALID("Token Valid"), TOKEN_ATTACK("Token Attack"), ERROR("Error"), CHECK_AUTHENTICATION("Check Authentication");
+    ASSOCIATION("Association"), XRDS("XRDS"), HTML("HTML"), TOKEN_VALID("Token Valid"), TOKEN_ATTACK("Token Attack"), ERROR("Error"), CHECK_AUTHENTICATION("Check Authentication"), XXE("XXE");
 	private String representation;
 
     private RequestType(String representation) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jdesktop.observablecollections.ObservableCollections;
 import org.jdesktop.observablecollections.ObservableList;
+import wsattacker.sso.openid.attacker.server.IdpType;
 
 /**
  * This class is somehow an advanced Logger for OpenID messages.
@@ -39,9 +40,10 @@ final public class RequestLogger {
      * @param text     A short description
      * @param request  The important part of the HTTP request
      * @param response The important part of the HTTP response
+     * @param idpType  Type of IdP: Attacker or Analyzer
      */
-    public void add(RequestType type, String text, String request, String response) {
-        entryList.add(0, new RequestLogEntry(type, text, request, response));
+    public void add(RequestType type, String text, String request, String response, IdpType idpType) {
+        entryList.add(0, new RequestLogEntry(type, text, request, response, idpType));
     }
 
     /**

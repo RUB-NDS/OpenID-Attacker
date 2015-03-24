@@ -27,12 +27,12 @@ public class HttpPostRedirect {
 	    return createPostRedirect(openidMessage.getDestinationUrl(value), openidMessage.getParameterMap(), new HashMap<String, String>());
     }
 
-    public static String createPostRedirect(final String destinationUrl, Map<String, String> getParameterMap, Map<String, String> postParameterMap) {
-        boolean interceptIdPResonse = OpenIdServerConfiguration.getInstance().isInterceptIdPResponse();
+    private static String createPostRedirect(final String destinationUrl, Map<String, String> getParameterMap, Map<String, String> postParameterMap) {
+        boolean interceptIdPResonse = OpenIdServerConfiguration.getAttackerInstance().isInterceptIdPResponse();
         return createPostRedirect(destinationUrl, getParameterMap, postParameterMap, interceptIdPResonse);
     }
 
-    private static String createPostRedirect(final String destinationUrl, Map<String, String> getParameterMap, Map<String, String> postParameterMap, boolean interceptIdPResonse) {
+    public static String createPostRedirect(final String destinationUrl, Map<String, String> getParameterMap, Map<String, String> postParameterMap, boolean interceptIdPResonse) {
         String result = "";
         try {
             Document html = createBasicPostRedirect();
@@ -57,7 +57,7 @@ public class HttpPostRedirect {
         return result;
     }
 
-    static String createGetRequest(final String destinationUrl, final Map<String, String> getParameterMap) {
+    public static String createGetRequest(final String destinationUrl, final Map<String, String> getParameterMap) {
         StringBuilder sb = new StringBuilder();
         sb.append(destinationUrl);
         char join;

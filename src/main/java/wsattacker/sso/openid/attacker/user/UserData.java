@@ -10,6 +10,8 @@ public class UserData extends AbstractBean {
     public static final String PROP_VALUE = "value";
     private String name = "newName";
     private String value = "newValue";
+    
+    
 
     /**
      * Get the value of value

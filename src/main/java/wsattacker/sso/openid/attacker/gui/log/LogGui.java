@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle;
+import javax.swing.table.DefaultTableModel;
 import org.jdesktop.beansbinding.AutoBinding;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Binding;
@@ -23,9 +24,11 @@ import org.jdesktop.swingbinding.JTableBinding;
 import org.jdesktop.swingbinding.SwingBindings;
 import wsattacker.sso.openid.attacker.controller.ServerController;
 import wsattacker.sso.openid.attacker.gui.server.DateRenderer;
+import wsattacker.sso.openid.attacker.gui.server.IdpTypeRenderer;
 import wsattacker.sso.openid.attacker.gui.server.TypeRenderer;
 import wsattacker.sso.openid.attacker.log.RequestLogger;
 import wsattacker.sso.openid.attacker.log.RequestType;
+import wsattacker.sso.openid.attacker.server.IdpType;
 
 public class LogGui extends javax.swing.JPanel {
 
@@ -36,6 +39,7 @@ public class LogGui extends javax.swing.JPanel {
         initComponents();
         logTable.setDefaultRenderer(Date.class, new DateRenderer());
         logTable.setDefaultRenderer(RequestType.class, new TypeRenderer());
+        logTable.setDefaultRenderer(IdpType.class, new IdpTypeRenderer());
     }
 
     /**
@@ -91,6 +95,9 @@ public class LogGui extends javax.swing.JPanel {
         columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${text}"));
         columnBinding.setColumnName("Text");
         columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(ELProperty.create("${idpType}"));
+        columnBinding.setColumnName("IdP Type");
+        columnBinding.setColumnClass(IdpType.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         logScrollPane.setViewportView(logTable);
@@ -131,8 +138,7 @@ public class LogGui extends javax.swing.JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -152,8 +158,7 @@ public class LogGui extends javax.swing.JPanel {
                         .addComponent(jButton1)))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(title)

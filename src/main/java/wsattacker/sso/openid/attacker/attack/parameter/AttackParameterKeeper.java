@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.jdesktop.observablecollections.ObservableCollections;
 import org.jdesktop.observablecollections.ObservableList;
 import org.jdesktop.observablecollections.ObservableListListener;
+import wsattacker.sso.openid.attacker.attack.parameter.utilities.HttpMethod;
 import wsattacker.sso.openid.attacker.composition.AbstractBean;
 import wsattacker.sso.openid.attacker.config.OpenIdServerConfiguration;
 import wsattacker.sso.openid.attacker.user.UserDataCollector;
@@ -106,7 +107,7 @@ public class AttackParameterKeeper extends AbstractBean implements Serializable,
             AttackParameter newParameter = AttackParameter.createWithNameAndValidValue(name, validValue);
 
             // TODO: Move this to a better position
-            UserDataCollector attackData = OpenIdServerConfiguration.getInstance().getAttackData();
+            UserDataCollector attackData = OpenIdServerConfiguration.getAttackerInstance().getAttackData();
             if (attackData.has(name)) {
                 newParameter.setUserAttackValue(attackData.getByName(name).getValue());
             }
@@ -277,5 +278,16 @@ public class AttackParameterKeeper extends AbstractBean implements Serializable,
             return false;
         }
         return true;
+    }
+    
+    public void resetAllParameters() {
+        for (AttackParameter param : parameterList) {
+            // reset methods
+            param.setValidMethod(HttpMethod.GET);
+            param.setAttackMethod(HttpMethod.DO_NOT_SEND);
+            
+            // disable "modify for attack signature computation"
+            param.setAttackValueUsedForSignatureComputation(false);
+        }
     }
 }

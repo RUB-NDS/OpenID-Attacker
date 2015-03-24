@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.openid4java.association.Association;
+import wsattacker.sso.openid.attacker.config.ToolConfiguration;
 import wsattacker.sso.openid.attacker.config.XmlPersistenceError;
 import wsattacker.sso.openid.attacker.config.XmlPersistenceHelper;
 import wsattacker.sso.openid.attacker.controller.ServerController;
@@ -57,14 +58,23 @@ final public class Bootstrap {
     }
 
     private static void readGlobalConfigFromDisk() throws XmlPersistenceError {
-        if (DEFAULT_CONFIG_FILE.isFile()) {
-            XmlPersistenceHelper.mergeConfigFileToConfigObject(DEFAULT_CONFIG_FILE, controller.getConfig());
+        if (DEFAULT_CONFIG_FILE.isFile()) {         
+            ToolConfiguration currentToolConfig = new ToolConfiguration();
+            currentToolConfig.setAttackerConfig(controller.getAttackerConfig());
+            currentToolConfig.setAnalyzerConfig(controller.getAnalyzerConfig());
+            
+            XmlPersistenceHelper.mergeConfigFileToConfigObject(DEFAULT_CONFIG_FILE, currentToolConfig);
         }
     }
 
     private static void saveGlobalConfigToDisk() throws XmlPersistenceError {
         controller.getConfig().setPerformAttack(false);
-        XmlPersistenceHelper.saveConfigToFile(DEFAULT_CONFIG_FILE, controller.getConfig());
+        
+        ToolConfiguration currentToolConfig = new ToolConfiguration();
+        currentToolConfig.setAttackerConfig(controller.getAttackerConfig());
+        currentToolConfig.setAnalyzerConfig(controller.getAnalyzerConfig());
+        
+        XmlPersistenceHelper.saveConfigToFile(DEFAULT_CONFIG_FILE, currentToolConfig);
     }
 
     private static void readAssociationFromDisk() throws XmlPersistenceError {

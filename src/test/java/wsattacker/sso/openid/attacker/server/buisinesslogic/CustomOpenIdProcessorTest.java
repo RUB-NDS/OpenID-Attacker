@@ -30,7 +30,7 @@ public class CustomOpenIdProcessorTest extends TestCase {
     @BeforeClass
     public void setUpClass() {
         // Just for the case of debugging...
-        OpenIdServerConfiguration.getInstance().setAssociationExpirationInSeconds(3600);
+        OpenIdServerConfiguration.getAttackerInstance().setAssociationExpirationInSeconds(3600);
     }
 
     @Before

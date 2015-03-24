@@ -1,0 +1,66 @@
+td, th {
+	text-align: center;
+}
+
+table.log table.result {
+	word-wrap: break-word;
+	table-layout: fixed;
+}
+
+th.description, td.description {
+	text-align: left;
+}
+
+table.log th, table.log td {
+	text-align: left;
+}
+
+pre {
+	text-align: left;
+	line-height: 1.8em;
+	border: none;
+	background-color: inherit;
+}
+
+td.prevented {
+	background-color: lime !important;
+}
+
+td.restricted {
+	background-color: yellow !important;
+}
+
+td.critical {
+	background-color: red !important;
+}
+
+td.neutral {
+	background-color: lightgrey !important;
+}
+
+h2 {
+	font-family: "Yanone Kaffeesatz", "Arial Black";
+	font-weight: bold;
+	font-size: 2.7em;
+	color: #0089c5;
+	margin-top: 1em;
+}
+
+h3 {
+	font-family: "Yanone Kaffeesatz";
+	font-size: 2.3em;
+	color: #0089c5;
+	margin-top: 1.2em;
+}
+
+img {
+	width: 100%;
+}
+
+img.svg {
+	width: 80%;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}

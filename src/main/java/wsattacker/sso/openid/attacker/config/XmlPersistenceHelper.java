@@ -32,12 +32,12 @@ final public class XmlPersistenceHelper {
      *
      * @param saveFile
      */
-    public static void saveConfigToFile(File saveFile, final OpenIdServerConfiguration configToSave) throws XmlPersistenceError {
+    public static void saveConfigToFile(File saveFile, final ToolConfiguration toolConfigToSave) throws XmlPersistenceError {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(OpenIdServerConfiguration.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(ToolConfiguration.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(configToSave, saveFile);
+            jaxbMarshaller.marshal(toolConfigToSave, saveFile);
             LOG.info(String.format("Saved successfully config to '%s'", saveFile.getAbsoluteFile()));
         } catch (JAXBException ex) {
             throw new XmlPersistenceError(String.format("Could not save config to File '%s'", saveFile.getAbsoluteFile()), ex);
@@ -49,12 +49,17 @@ final public class XmlPersistenceHelper {
      *
      * @param loadFile
      */
-    public static void mergeConfigFileToConfigObject(final File loadFile, OpenIdServerConfiguration currentConfiguration) throws XmlPersistenceError {
+    public static void mergeConfigFileToConfigObject(final File loadFile, ToolConfiguration currentToolConfig) throws XmlPersistenceError {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(OpenIdServerConfiguration.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(ToolConfiguration.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            OpenIdServerConfiguration loadedConfig = (OpenIdServerConfiguration) jaxbUnmarshaller.unmarshal(loadFile);
-            BeanUtils.copyProperties(currentConfiguration, loadedConfig);
+            ToolConfiguration loadedConfig = (ToolConfiguration) jaxbUnmarshaller.unmarshal(loadFile);
+            
+            //BeanUtils.copyProperties(currentToolConfig, loadedConfig);
+            //ServerController controller = new ServerController();
+            BeanUtils.copyProperties(currentToolConfig.getAttackerConfig(), loadedConfig.getAttackerConfig());
+            BeanUtils.copyProperties(currentToolConfig.getAnalyzerConfig(), loadedConfig.getAnalyzerConfig());
+            
             LOG.info(String.format("Loaded successfully config from '%s'", loadFile.getAbsoluteFile()));
         } catch (InvocationTargetException | IllegalAccessException | JAXBException ex) {
             throw new XmlPersistenceError(String.format("Could not load config from File '%s'", loadFile.getAbsoluteFile()), ex);

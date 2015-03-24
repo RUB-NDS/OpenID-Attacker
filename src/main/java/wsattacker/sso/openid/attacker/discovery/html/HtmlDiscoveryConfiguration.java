@@ -1,8 +1,9 @@
 package wsattacker.sso.openid.attacker.discovery.html;
 
+import java.io.Serializable;
 import wsattacker.sso.openid.attacker.composition.AbstractBean;
 
-public class HtmlDiscoveryConfiguration extends AbstractBean {
+public class HtmlDiscoveryConfiguration extends AbstractBean implements Serializable {
 
     public static final String PROP_BASEURL = "baseUrl";
     public static final String PROP_INCLUDEIDENTITY = "includeIdentity";
