@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * OpenID Attacker
+ * (C) 2015 Christian Mainka & Christian Koßmann
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 package wsattacker.sso.openid.attacker.evaluation.strategies;
 
@@ -15,6 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,11 +40,6 @@ import wsattacker.sso.openid.attacker.evaluation.ServiceProvider.User;
 import wsattacker.sso.openid.attacker.log.RequestLogEntry;
 import wsattacker.sso.openid.attacker.log.RequestLogger;
 
-
-/**
- *
- * @author christian
- */
 public class InjectJavaScriptLoginStrategy implements LoginStrategy {
 
     @Override
@@ -50,13 +59,16 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
            frequent names are also tried. */
         WebElement element = null;
         String[] possibleNames = {"openid_identifier", "openid", "openID",
-            "openid_url", "openid:url", "user", "openid-url", "openid-identifier", "oid_identifier"};
+            "openid_url", "openid:url", "user", "openid-url", "openid-identifier", "oid_identifier",
+            "ctl00$Column1Area$OpenIDControl1$openid_url",
+            "user_input"
+        };
         
         for (String possibleName: possibleNames) {
             try {
                 element = driver.findElement(By.name(possibleName));
                 System.out.println("Find OpenID field with name: " + possibleName);
-                break;            
+                //break;            
             } catch (NoSuchElementException exception) {
                 //System.out.println("Cannot find: " + possibleName);
             }
@@ -108,8 +120,17 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
             jse.executeScript("var element = arguments[0];"
                             + "while(element.tagName != 'FORM') {"
                             +     "element = element.parentNode;"
+                            +     "console.log(element);"
                             + "}"
                             + "element.submit();", element);
+            
+        }
+        
+        // click on accept in modal alert window (if present)
+        try {
+            driver.switchTo().alert().accept();
+        } catch (NoAlertPresentException ex) {
+            // do nothing
         }
         
         // wait 10 seconds: hopefully, all redirects are performed then

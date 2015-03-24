@@ -1,7 +1,21 @@
 /*
- * Christian Koßmann (23.09.2014)
+ * OpenID Attacker
+ * (C) 2015 Christian Mainka & Christian Koßmann
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-
 package wsattacker.sso.openid.attacker.evaluation;
 
 
@@ -16,11 +30,6 @@ import wsattacker.sso.openid.attacker.config.OpenIdServerConfiguration;
 import wsattacker.sso.openid.attacker.evaluation.strategies.InjectJavaScriptLoginStrategy;
 import wsattacker.sso.openid.attacker.evaluation.strategies.LoginStrategy;
 
-
-/**
- *
- * @author christiankossmann
- */
 public class ServiceProvider implements Serializable {
     private final String url;
     
@@ -31,8 +40,8 @@ public class ServiceProvider implements Serializable {
     private final List<String> attackerSuccessPageSources = new ArrayList<>();
     private final List<String> failurePageSources = new ArrayList<>();
     
-    private final DetermineUserStrategy determineUserStrategy = new LevenshteinAndCountingMatchesStrategy();
-    private final LoginStrategy loginStrategy = new InjectJavaScriptLoginStrategy();
+    private transient DetermineUserStrategy determineUserStrategy;
+    private transient LoginStrategy loginStrategy;
     
     /* Indicates which user should be or is logged in. */
     public enum User {
@@ -58,7 +67,7 @@ public class ServiceProvider implements Serializable {
     
     /* Logs the user in to Service Provider and returns the source code. */
     public LoginResult login(User user) {
-        return loginStrategy.login(user, this);
+        return getLoginStrategy().login(user, this);
     }
     
     /**
@@ -89,9 +98,9 @@ public class ServiceProvider implements Serializable {
     public User determineAuthenticatedUser(String pageSource) {
         
         
-        return determineUserStrategy.determineAuthenticatedUser(pageSource, this);
+        return getDetermineUserStrategy().determineAuthenticatedUser(pageSource, this);
     }
-    
+        
     public void addVictimSuccessPageSource(String pageSource) {
         victimSuccessPageSources.add(pageSource);
     }
@@ -142,5 +151,21 @@ public class ServiceProvider implements Serializable {
 
     public List<String> getFailurePageSources() {
         return failurePageSources;
+    }
+
+    private DetermineUserStrategy getDetermineUserStrategy() {
+        if (determineUserStrategy == null) {
+            determineUserStrategy = new LevenshteinAndCountingMatchesStrategy();
+        }
+        
+        return determineUserStrategy;
+    }
+
+    private LoginStrategy getLoginStrategy() {
+        if (loginStrategy == null) {
+            loginStrategy = new InjectJavaScriptLoginStrategy();
+        }
+        
+        return loginStrategy;
     }
 }

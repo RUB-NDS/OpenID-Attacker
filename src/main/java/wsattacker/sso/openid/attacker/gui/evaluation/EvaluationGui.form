@@ -130,7 +130,11 @@
                               </Group>
                           </Group>
                           <Component id="currentActionLabel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="currentActionProgressBar" alignment="1" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="currentActionProgressBar" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -194,7 +198,7 @@
                       <Component id="performAllAttacksButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="138" max="32767" attributes="0"/>
+              <EmptySpace pref="129" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="currentActionProgressBar" min="-2" max="-2" attributes="0"/>
@@ -202,7 +206,8 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="currentActionLabel" min="-2" pref="21" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -224,7 +229,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="serviceProviderTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="https://stackoverflow.com/users/login"/>
+        <Property name="text" type="java.lang.String" value="https://example.com/login"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serviceProviderTextFieldActionPerformed"/>
@@ -434,5 +439,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="cancelButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cancel"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

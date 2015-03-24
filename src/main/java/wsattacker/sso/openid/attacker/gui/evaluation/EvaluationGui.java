@@ -1,5 +1,20 @@
 /*
- * Christian Koßmann (23.09.2014)
+ * OpenID Attacker
+ * (C) 2015 Christian Mainka & Christian Koßmann
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 package wsattacker.sso.openid.attacker.gui.evaluation;
 
@@ -18,7 +33,10 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
 import static javax.swing.SwingWorker.StateValue.DONE;
 import javax.swing.event.DocumentEvent;
@@ -33,13 +51,10 @@ import wsattacker.sso.openid.attacker.evaluation.ServiceProvider;
 import wsattacker.sso.openid.attacker.evaluation.ServiceProvider.User;
 import wsattacker.sso.openid.attacker.evaluation.training.TrainingWorker;
 
-/**
- *
- * @author christiankossmann
- */
 public class EvaluationGui extends javax.swing.JPanel {
 
     private ServiceProvider serviceProvider;    
+    private SwingWorker<Void, ?> currentWorker;
 
     /**
      * Creates new form TestingGui
@@ -79,7 +94,13 @@ public class EvaluationGui extends javax.swing.JPanel {
     }
     
     private void setTrainined(boolean value) {
-        trainButton.setEnabled(!value);
+        if (value) {
+            trainButton.setText("Retrain");
+        } else {
+            trainButton.setText("Train");
+        }
+        
+        
         trainedLabel.setVisible(value);
         notTrainedLabel.setVisible(!value);
         saveTrainingButton.setEnabled(value);
@@ -108,6 +129,7 @@ public class EvaluationGui extends javax.swing.JPanel {
         currentActionProgressBar.setVisible(value);
         currentActionProgressBar.setValue(0);
         currentActionLabel.setVisible(value);
+        cancelButton.setVisible(value);
     } 
 
     /**
@@ -146,6 +168,7 @@ public class EvaluationGui extends javax.swing.JPanel {
         victimTable = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
         attackerTable = new javax.swing.JTable();
+        cancelButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -177,7 +200,7 @@ public class EvaluationGui extends javax.swing.JPanel {
 
         jLabel1.setText("Service Provider");
 
-        serviceProviderTextField.setText("https://stackoverflow.com/users/login");
+        serviceProviderTextField.setText("https://example.com/login");
         serviceProviderTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 serviceProviderTextFieldActionPerformed(evt);
@@ -274,6 +297,13 @@ public class EvaluationGui extends javax.swing.JPanel {
         jTableBinding.bind();
         jScrollPane5.setViewportView(attackerTable);
 
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -331,7 +361,10 @@ public class EvaluationGui extends javax.swing.JPanel {
                                         .addGap(6, 6, 6)
                                         .addComponent(jLabel8))))
                             .addComponent(currentActionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(currentActionProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(currentActionProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cancelButton)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -377,14 +410,15 @@ public class EvaluationGui extends javax.swing.JPanel {
                             .addComponent(attackComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(performAllAttacksButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(currentActionProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(currentActionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))))
         );
 
         bindingGroup.bind();
@@ -405,13 +439,27 @@ public class EvaluationGui extends javax.swing.JPanel {
         trainingWorker.addPropertyChangeListener((PropertyChangeEvent evt1) -> {
             if (evt1.getPropertyName().equals("state")) {
                 if ((StateValue) evt1.getNewValue() == DONE) {
+                    boolean cancelled = currentWorker.isCancelled();
+                    System.out.println("cancelled: " + cancelled);
+                    
+                    if (cancelled) {
+                        try {
+                            ((TrainingWorker)currentWorker).awaitActualCompletion();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(EvaluationGui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
                     enableAllButtons(true);
-                    setTrainined(true);
+                    setTrainined(!cancelled);
                     showProgressBar(false);
                 }
             }
+            System.out.println(evt1.getPropertyName() + " from " + evt1.getOldValue() + " to " + evt1.getNewValue());
         });
         trainingWorker.execute();
+        
+        currentWorker = trainingWorker;
     }//GEN-LAST:event_trainButtonActionPerformed
 
     private void serviceProviderTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceProviderTextFieldActionPerformed
@@ -487,7 +535,7 @@ public class EvaluationGui extends javax.swing.JPanel {
             
             this.serviceProvider = (ServiceProvider) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            
+            System.out.println(e);
         }
         
         if (this.serviceProvider == null) {
@@ -598,10 +646,17 @@ public class EvaluationGui extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_performAllAttacksButtonActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        if (currentWorker != null) {
+            currentWorker.cancel(false);
+        }
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox attackComboBox;
     private javax.swing.JTable attackerTable;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel currentActionLabel;
     private javax.swing.JProgressBar currentActionProgressBar;
     private javax.swing.JLabel jLabel1;

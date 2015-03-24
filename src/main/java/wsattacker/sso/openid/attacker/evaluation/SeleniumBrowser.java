@@ -1,8 +1,20 @@
 /*
- * Christian Koßmann (01.10.2014)
- * 
- * This class uses the singleton pattern to return an instance of a WebDriver
- * Object (Selenium). Currently, the browser is Firefox.
+ * OpenID Attacker
+ * (C) 2015 Christian Mainka & Christian Koßmann
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 package wsattacker.sso.openid.attacker.evaluation;
 
@@ -11,8 +23,6 @@ import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,10 +40,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import wsattacker.sso.openid.attacker.gui.evaluation.EvaluationGui;
 
-/**
- *
- * @author christiankossmann
- */
 public class SeleniumBrowser {
     private static WebDriver INSTANCE;
     
@@ -42,7 +48,8 @@ public class SeleniumBrowser {
     }   
     
     public static WebDriver getWebDriver() {
-        if (INSTANCE == null) {
+        
+        if (INSTANCE == null || hasQuit(INSTANCE) || INSTANCE.getWindowHandles().isEmpty()) {
             // create chrome profile
             //ChromeOptions options = new ChromeOptions();
             //options.addExtensions(new File("adblock.crx"));
@@ -83,6 +90,15 @@ public class SeleniumBrowser {
         
         return INSTANCE;
     }
+    
+    private static boolean hasQuit(WebDriver driver) {
+        try {
+            driver.getTitle();
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+}
     
     public static void quitWebDriver() {
         getWebDriver().quit();
