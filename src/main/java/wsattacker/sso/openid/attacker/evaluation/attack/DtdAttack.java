@@ -26,17 +26,21 @@ import wsattacker.sso.openid.attacker.evaluation.ServiceProvider.User;
 import wsattacker.sso.openid.attacker.evaluation.attack.AttackResult.Interpretation;
 import wsattacker.sso.openid.attacker.evaluation.attack.AttackResult.Result;
 
-public class XxeAttack extends AbstractAttack {
+public class DtdAttack extends AbstractAttack {
 
     private String xrdsDocument;
     private final String urlIdp;
     private HtmlDiscoveryConfiguration htmlConfigCopy;
     
-    public XxeAttack(ServiceProvider serviceProvider) {
+    public DtdAttack(ServiceProvider serviceProvider) {
         super(serviceProvider);
         
         // get URL of IdP
         urlIdp = serverController.getAttackerConfig().getHtmlConfiguration().getBaseUrl();
+    }
+    
+    public String addPathToUrl(String path, String url) {
+        return "";
     }
 
     @Override

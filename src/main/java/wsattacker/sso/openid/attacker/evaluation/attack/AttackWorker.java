@@ -61,7 +61,7 @@ public class AttackWorker extends SwingWorker<Void, AttackResult> {
                 attack = new ParameterForgeryAttack(serviceProvider);
                 break;
             case "XXE/DTD":
-                attack = new XxeAttack(serviceProvider);
+                attack = new DtdAttack(serviceProvider);
                 break;
             case "Malicious Metadata":
                 attack = new MaliciousMetadataAttack(serviceProvider);
