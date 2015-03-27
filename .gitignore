@@ -6,3 +6,6 @@ pom.xml.next
 release.properties
 nbactions.xml
 openId_config.xml
+openId_associations.ser
+images
+report

