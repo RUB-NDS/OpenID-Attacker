@@ -104,7 +104,7 @@ public class KeyConfusionAttack extends AbstractAttack {
         
         LoginResult loginResult = serviceProvider.login(ServiceProvider.User.ATTACKER);
         
-        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource()) == User.VICTIM;
+        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource(), loginResult.getUrlAfterLogin()) == User.VICTIM;
         Result result = success ? Result.SUCCESS : Result.FAILURE;
         Interpretation interpretation = success ? Interpretation.CRITICAL : Interpretation.PREVENTED;
         
@@ -188,7 +188,7 @@ public class KeyConfusionAttack extends AbstractAttack {
         loginResultAttacker.setScreenshot(SeleniumBrowser.takeScreenshot());
         loginResultAttacker.setLogEntries(logEntries);
         
-        boolean success = serviceProvider.determineAuthenticatedUser(driver.getPageSource()) == User.VICTIM;
+        boolean success = serviceProvider.determineAuthenticatedUser(driver.getPageSource(), driver.getCurrentUrl()) == User.VICTIM;
         Result result = success ? Result.SUCCESS : Result.FAILURE;
         Interpretation interpretation = success ? Interpretation.CRITICAL : Interpretation.PREVENTED; 
         

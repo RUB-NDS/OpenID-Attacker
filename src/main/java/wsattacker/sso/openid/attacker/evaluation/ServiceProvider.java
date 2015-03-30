@@ -23,6 +23,7 @@ package wsattacker.sso.openid.attacker.evaluation;
 import wsattacker.sso.openid.attacker.evaluation.strategies.DetermineUserStrategy;
 import wsattacker.sso.openid.attacker.evaluation.strategies.LevenshteinAndCountingMatchesStrategy;
 import java.io.Serializable;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,10 @@ public class ServiceProvider implements Serializable {
     private final List<String> victimSuccessPageSources = new ArrayList<>();
     private final List<String> attackerSuccessPageSources = new ArrayList<>();
     private final List<String> failurePageSources = new ArrayList<>();
+    
+    private final List<String> victimSuccessUrls = new ArrayList<>();
+    private final List<String> attackerSuccessUrls = new ArrayList<>();
+    private final List<String> failureUrls = new ArrayList<>();
     
     private transient DetermineUserStrategy determineUserStrategy;
     private transient LoginStrategy loginStrategy;
@@ -83,7 +88,7 @@ public class ServiceProvider implements Serializable {
         
         LoginResult loginResult = login(openId);
         
-        User user = determineAuthenticatedUser(loginResult.getPageSource());
+        User user = determineAuthenticatedUser(loginResult.getPageSource(), loginResult.getUrlAfterLogin());
         loginResult.setAuthenticatedUser(user);
         
         return loginResult;
@@ -95,10 +100,10 @@ public class ServiceProvider implements Serializable {
      * @param pageSource The page source of the loginAndDetermineAuthenticatedUser attempt.
      * @return The authenticated user.
      */
-    public User determineAuthenticatedUser(String pageSource) {
+    public User determineAuthenticatedUser(String pageSource, String url) {
         
         
-        return getDetermineUserStrategy().determineAuthenticatedUser(pageSource, this);
+        return getDetermineUserStrategy().determineAuthenticatedUser(pageSource, url, this);
     }
         
     public void addVictimSuccessPageSource(String pageSource) {
@@ -167,5 +172,29 @@ public class ServiceProvider implements Serializable {
         }
         
         return loginStrategy;
+    }
+    
+    public void addVictimSuccessUrl(String url) {
+        this.victimSuccessUrls.add(url);
+    }
+    
+    public void addAttackerSuccessUrl(String url) {
+        this.attackerSuccessUrls.add(url);
+    }
+    
+    public void addFailureUrl(String url) {
+        this.failureUrls.add(url);
+    }
+
+    public List<String> getVictimSuccessUrls() {
+        return victimSuccessUrls;
+    }
+
+    public List<String> getAttackerSuccessUrls() {
+        return attackerSuccessUrls;
+    }
+
+    public List<String> getFailureUrls() {
+        return failureUrls;
     }
 }

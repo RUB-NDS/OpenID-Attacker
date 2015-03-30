@@ -68,7 +68,7 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
             try {
                 element = driver.findElement(By.name(possibleName));
                 System.out.println("Find OpenID field with name: " + possibleName);
-                //break;            
+                break;            
             } catch (NoSuchElementException exception) {
                 //System.out.println("Cannot find: " + possibleName);
             }
@@ -155,7 +155,7 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
         // restore old XRDS location
         OpenIdServerConfiguration.getAttackerInstance().getHtmlConfiguration().setIdentity(oldIdentity);
         
-        return new LoginResult(pageSource, logEntries, screenshot);
+        return new LoginResult(pageSource, logEntries, screenshot, driver.getCurrentUrl());
     }
     
 }

@@ -67,7 +67,7 @@ public class MaliciousMetadataAttack extends AbstractAttack {
         
         loginResult = serviceProvider.login(ServiceProvider.User.ATTACKER);
         
-        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource()) == ServiceProvider.User.VICTIM;
+        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource(), loginResult.getUrlAfterLogin()) == ServiceProvider.User.VICTIM;
         Result result = success ? Result.SUCCESS : Result.FAILURE;
         Interpretation interpretation = success ? Interpretation.CRITICAL : Interpretation.PREVENTED;        
         
@@ -110,7 +110,7 @@ public class MaliciousMetadataAttack extends AbstractAttack {
         
         loginResult = serviceProvider.login(ServiceProvider.User.ATTACKER);
         
-        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource()) == ServiceProvider.User.VICTIM;
+        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource(), loginResult.getUrlAfterLogin()) == ServiceProvider.User.VICTIM;
         Result result = success ? Result.SUCCESS : Result.FAILURE;
         Interpretation interpretation = success ? Interpretation.CRITICAL : Interpretation.PREVENTED;        
         

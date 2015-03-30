@@ -227,13 +227,14 @@
             <version>2.12</version>
         </dependency>
         -->
-        <!-- Ghostdriver - for PhantomJS Browser
+        <!-- Ghostdriver - for PhantomJS Browser -->
+        
         <dependency>
-            <groupId>com.github.detro.ghostdriver</groupId>
+            <groupId>com.github.detro</groupId>
             <artifactId>phantomjsdriver</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.0</version>
         </dependency>
-        -->
+        
         <!-- SimMetric - differences between Strings -->
         <dependency>
            <groupId>uk.ac.shef.wit</groupId>

@@ -61,6 +61,7 @@ public class TrainingWorker extends SwingWorker<Void, TrainingResult> {
             // Attacker
             TrainingResult trainingResult = training.performSuccessfulLogin(User.ATTACKER);
             serviceProvider.addAttackerSuccessPageSource(trainingResult.getLoginResult().getPageSource());
+            serviceProvider.addAttackerSuccessUrl(trainingResult.getLoginResult().getUrlAfterLogin());
             
             publish(trainingResult);
             
@@ -73,6 +74,7 @@ public class TrainingWorker extends SwingWorker<Void, TrainingResult> {
             // Victim
             trainingResult = training.performSuccessfulLogin(User.VICTIM);
             serviceProvider.addVictimSuccessPageSource(trainingResult.getLoginResult().getPageSource());
+            serviceProvider.addVictimSuccessUrl(trainingResult.getLoginResult().getUrlAfterLogin());
             
             publish(trainingResult);
             
@@ -85,6 +87,7 @@ public class TrainingWorker extends SwingWorker<Void, TrainingResult> {
             // Error
             trainingResult = training.performUnsuccessfulLogin(errors[i]);
             serviceProvider.addFailurePageSource(trainingResult.getLoginResult().getPageSource());
+            serviceProvider.addFailureUrl(trainingResult.getLoginResult().getUrlAfterLogin());
             
             publish(trainingResult);
             

@@ -36,12 +36,15 @@ public class LoginResult implements Serializable {
     private final String pageSource;
     private List<RequestLogEntry> logEntries;
     private File screenshot;
+    private String urlAfterLogin;
     
     public LoginResult(String pageSource, List<RequestLogEntry> logEntries,
-            File screenshot) {
+            File screenshot, String urlAfterLogin) {
         
             this.pageSource = pageSource;
             this.logEntries = logEntries;
+            this.urlAfterLogin = urlAfterLogin;
+            System.out.println("URL after login: " + urlAfterLogin);
         try {   
             String filename = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss'.png'").format(new Date());
             File newFile = new File("images/" + filename);
@@ -157,5 +160,9 @@ public class LoginResult implements Serializable {
 
     public File getScreenshot() {
         return screenshot;
+    }
+
+    public String getUrlAfterLogin() {
+        return urlAfterLogin;
     }
 }

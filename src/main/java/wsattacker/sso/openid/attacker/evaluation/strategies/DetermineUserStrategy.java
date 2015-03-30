@@ -22,5 +22,5 @@ import wsattacker.sso.openid.attacker.evaluation.ServiceProvider;
 import wsattacker.sso.openid.attacker.evaluation.ServiceProvider.User;
 
 public interface DetermineUserStrategy {
-    public User determineAuthenticatedUser(String pageSource, ServiceProvider serviceProvider);
+    public User determineAuthenticatedUser(String pageSource, String url, ServiceProvider serviceProvider);
 }

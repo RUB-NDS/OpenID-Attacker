@@ -27,7 +27,7 @@ import wsattacker.sso.openid.attacker.evaluation.ServiceProvider.User;
 public class LengthDeviationAndCountingMatchesStrategy implements DetermineUserStrategy {
 
     @Override
-    public ServiceProvider.User determineAuthenticatedUser(String pageSource, ServiceProvider serviceProvider) {
+    public ServiceProvider.User determineAuthenticatedUser(String pageSource, String url, ServiceProvider serviceProvider) {
         
         float success = 0.0f;
         float failure = 0.0f;

@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import wsattacker.sso.openid.attacker.evaluation.ExecutorServices;
 import wsattacker.sso.openid.attacker.evaluation.ServiceProvider;
+import wsattacker.sso.openid.attacker.evaluation.ServiceProvider.User;
 
 public class LevenshteinAndCountingMatchesStrategy implements DetermineUserStrategy {
     
@@ -52,7 +53,39 @@ public class LevenshteinAndCountingMatchesStrategy implements DetermineUserStrat
     }
 
     @Override
-    public ServiceProvider.User determineAuthenticatedUser(String pageSource, ServiceProvider serviceProvider) {
+    public ServiceProvider.User determineAuthenticatedUser(String pageSource, String url, ServiceProvider serviceProvider) {
+        
+        /* First: Compare URLs */
+        List<String> victimSuccessUrls = serviceProvider.getVictimSuccessUrls();
+        List<String> attackerSuccessUrls = serviceProvider.getAttackerSuccessUrls();
+        List<String> failureUrls = serviceProvider.getFailureUrls();
+        
+        boolean successUrlEqual = true;
+        boolean failureUrlNotEqual = true;
+        for (String victimSuccessUrl: victimSuccessUrls) {
+            for (String attackerSuccessUrl: attackerSuccessUrls) {
+                if (!victimSuccessUrl.equalsIgnoreCase(attackerSuccessUrl)) {
+                    successUrlEqual = false;
+                    break;
+                }
+            }
+            
+            for (String failureUrl: failureUrls) {
+                if (victimSuccessUrl.equalsIgnoreCase(failureUrl)) {
+                    failureUrlNotEqual = false;
+                    break;
+                }
+            }
+        }
+        
+        if (successUrlEqual && failureUrlNotEqual) {
+            System.out.println("Determinte authenticated user by URL...");
+            
+            if (!url.equalsIgnoreCase(victimSuccessUrls.get(0))) {
+                return User.ERROR;
+            }
+        }
+        
         
         String pageBody = extractBody(pageSource);
         

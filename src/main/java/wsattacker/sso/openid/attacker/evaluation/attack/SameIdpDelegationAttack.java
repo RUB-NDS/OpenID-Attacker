@@ -83,7 +83,7 @@ public class SameIdpDelegationAttack extends AbstractAttack {
         
         LoginResult loginResult = serviceProvider.login(User.ATTACKER);
         
-        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource()) == ServiceProvider.User.VICTIM;
+        boolean success = serviceProvider.determineAuthenticatedUser(loginResult.getPageSource(), loginResult.getUrlAfterLogin()) == ServiceProvider.User.VICTIM;
         AttackResult.Result result = success ? AttackResult.Result.SUCCESS : AttackResult.Result.FAILURE;
         AttackResult.Interpretation interpretation = success ? AttackResult.Interpretation.CRITICAL : AttackResult.Interpretation.PREVENTED;        
         
