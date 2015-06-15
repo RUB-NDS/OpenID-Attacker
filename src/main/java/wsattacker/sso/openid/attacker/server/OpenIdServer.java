@@ -20,6 +20,7 @@ package wsattacker.sso.openid.attacker.server;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.InetSocketAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.server.Server;
@@ -80,9 +81,9 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
     public OpenIdServer() {
         this(IdpType.ATTACKER);
     }
-    
+
     public OpenIdServer(IdpType idpType) {
-        
+
         switch (idpType) {
             case ATTACKER:
                 this.config = OpenIdServerConfiguration.getAttackerInstance();
@@ -91,7 +92,7 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
                 this.config = OpenIdServerConfiguration.getAnalyzerInstance();
                 break;
         }
-        
+
         final XrdsConfiguration xrdsConfig = config.getXrdsConfiguration();
         final HtmlDiscoveryConfiguration htmlConfiguration = config.getHtmlConfiguration();
         handler = new CustomOpenIdProviderHandler(idpType);
@@ -184,8 +185,9 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
     }
 
     public void start() throws OpenIdAttackerServerException {
-        int port = config.getServerListenPort();
-        newServer = new Server(port);
+        final int port = config.getServerListenPort();
+	final String host = config.getServerListenHost();
+        newServer = new Server(new InetSocketAddress(host, port));
         newServer.setHandler(handler);
         try {
             newServer.start();
