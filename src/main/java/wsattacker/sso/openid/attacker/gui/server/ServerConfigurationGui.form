@@ -43,7 +43,6 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="portText" alignment="0" max="32767" attributes="0"/>
                           <Component id="expirationText" alignment="0" max="32767" attributes="0"/>
                           <Component id="associationPrefixValue" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
@@ -64,6 +63,11 @@
                               <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                               <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="4" pref="513" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="hostnameText" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="portText" min="-2" pref="117" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -86,6 +90,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="portLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="portText" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="hostnameText" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -139,7 +144,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="portLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Server Listen Port:"/>
+        <Property name="text" type="java.lang.String" value="Server Listen Host/Port:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="associationPrefixLabel">
@@ -168,6 +173,13 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Perform Attack:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="hostnameText">
+      <BindingProperties>
+        <BindingProperty name="text" source="controller" sourcePath="${config.serverListenHost}" target="hostnameText" targetPath="text" updateStrategy="0" immediately="false">
+          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+        </BindingProperty>
+      </BindingProperties>
     </Component>
     <Component class="javax.swing.JTextField" name="portText">
       <BindingProperties>
