@@ -193,7 +193,7 @@ public class OpenIdServer extends AbstractBean implements PropertyChangeListener
             newServer.start();
             Status oldStatus = status;
             status = Status.RUNNING;
-            setServerStatusline(String.format("%s... URL: %s Port: %d", status, processor.getEndpoint(), port));
+            setServerStatusline(String.format("%s... Host: %s Port: %d", status, host, port));
             firePropertyChange(PROP_STATUS, oldStatus, status);
         } catch (Exception ex) {
             throw new OpenIdAttackerServerException("Could not start the server", ex);
