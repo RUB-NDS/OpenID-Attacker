@@ -46,14 +46,14 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
     public LoginResult login(User user, ServiceProvider serviceProvider) {
         // before loginAndDetermineAuthenticatedUser remove all cookies
         SeleniumBrowser.deleteAllCookies();
-        
+
         // copy log entries before login
         List<RequestLogEntry> logEntriesBeforeLogin = new ArrayList<>(RequestLogger.getInstance().getEntryList());
-        
+
         // open url
         WebDriver driver = SeleniumBrowser.getWebDriver();
         driver.get(serviceProvider.getUrl());
-        
+
         /* Search the page for the OpenID input field. According to the
            standard it should be called "openid_identifier" but some other
            frequent names are also tried. */
@@ -61,28 +61,28 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
         String[] possibleNames = {"openid_identifier", "openid", "openID",
             "openid_url", "openid:url", "user", "openid-url", "openid-identifier", "oid_identifier",
             "ctl00$Column1Area$OpenIDControl1$openid_url",
-            "user_input"
+            "user_input", "openIdUrl"
         };
-        
+
         for (String possibleName: possibleNames) {
             try {
                 element = driver.findElement(By.name(possibleName));
                 System.out.println("Find OpenID field with name: " + possibleName);
-                break;            
+                break;
             } catch (NoSuchElementException exception) {
                 //System.out.println("Cannot find: " + possibleName);
             }
         }
-        
+
         // save old XRDS lcoation
         String oldIdentity = OpenIdServerConfiguration.getAttackerInstance().getHtmlConfiguration().getIdentity();
-        
+
         /* If an input field is found, it is filled with the OpenID identifier.
            Selenium cannot set text of hidden input field, consequently,
            JavaScript is injected which performs this task. */
         if (element != null) {
             JavascriptExecutor jse = (JavascriptExecutor)driver;
-            
+
             // set text of text field
             switch (user) {
                 case VICTIM:
@@ -93,29 +93,29 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
                     break;
                 case ATTACKER_RANDOM:
                     String attackerOpenId = serviceProvider.getAttackerOpenId();
-                    
+
                     if (attackerOpenId.endsWith("/")) {
                         attackerOpenId = attackerOpenId.substring(0, attackerOpenId.length()-1);
                     }
-                    
+
                     String randomAttackerIdentity = attackerOpenId + RandomStringUtils.random(10, true, true);
                     OpenIdServerConfiguration.getAttackerInstance().getHtmlConfiguration().setIdentity(randomAttackerIdentity);
                     jse.executeScript("arguments[0].value='" + randomAttackerIdentity + "'", element);
                     break;
             }
-            
+
             // special case: owncloud
             if (driver.getCurrentUrl().contains("owncloud")) {
                 // set arbitrary password
                 WebElement passwordElement = driver.findElement(By.id("password"));
                 passwordElement.clear();
                 passwordElement.sendKeys("xyz");
-                
+
                 WebElement submitElement = driver.findElement(By.id("submit"));
-                
+
                 jse.executeScript("var element = arguments[0]; element.removeAttribute('id');", submitElement);
             }
-            
+
             // submit form
             jse.executeScript("var element = arguments[0];"
                             + "while(element.tagName != 'FORM') {"
@@ -123,39 +123,39 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
                             +     "console.log(element);"
                             + "}"
                             + "element.submit();", element);
-            
+
         }
-        
+
         // click on accept in modal alert window (if present)
         try {
             driver.switchTo().alert().accept();
         } catch (NoAlertPresentException ex) {
             // do nothing
         }
-        
+
         // wait 10 seconds: hopefully, all redirects are performed then
-        try {            
+        try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
             Logger.getLogger(ServiceProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         /* determines the log entries of the current login procedure:
            logEntries = logEntriesAfterLogin - logEntriesBeforeLogin
            (subtraction of sets) */
         List<RequestLogEntry> logEntriesAfterLogin = RequestLogger.getInstance().getEntryList();
         List<RequestLogEntry> logEntries = (List<RequestLogEntry>) CollectionUtils.subtract(logEntriesAfterLogin, logEntriesBeforeLogin);
-        
+
         // invert order of log - should be chronological
         Collections.reverse(logEntries);
-        
+
         File screenshot = SeleniumBrowser.takeScreenshot();
         String pageSource = driver.getPageSource();
-        
+
         // restore old XRDS location
         OpenIdServerConfiguration.getAttackerInstance().getHtmlConfiguration().setIdentity(oldIdentity);
-        
+
         return new LoginResult(pageSource, logEntries, screenshot, driver.getCurrentUrl());
     }
-    
+
 }
