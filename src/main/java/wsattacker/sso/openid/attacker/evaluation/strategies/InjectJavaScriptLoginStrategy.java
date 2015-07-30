@@ -28,6 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -117,13 +118,17 @@ public class InjectJavaScriptLoginStrategy implements LoginStrategy {
             }
 
             // submit form
+	    if (element.isDisplayed()) {
+		// element.submit(); // does not work as expected
+		element.sendKeys(Keys.RETURN);
+	    } else {
             jse.executeScript("var element = arguments[0];"
                             + "while(element.tagName != 'FORM') {"
                             +     "element = element.parentNode;"
                             +     "console.log(element);"
                             + "}"
                             + "element.submit();", element);
-
+	    }
         }
 
         // click on accept in modal alert window (if present)
