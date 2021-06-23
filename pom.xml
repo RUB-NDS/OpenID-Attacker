@@ -112,7 +112,7 @@
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jettyVersion>7.6.16.v20140903</jettyVersion>
+        <jettyVersion>9.4.41.v20210516</jettyVersion>
     </properties>
  
     <repositories>
